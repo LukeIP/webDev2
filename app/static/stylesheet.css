@@ -1,0 +1,74 @@
+:root{
+    --background: #fffffe;
+    --text: #17152b;
+    --highlight: #ff9900;
+    --red: #ca3c3c;
+    --green: #00893e
+}
+
+body{
+    background-color: var(--background);
+    color: var(--text);
+    font-family: 'Noto Sans', sans-serif;
+    text-align: center;
+    
+}
+
+h1,h2,h3{
+    font-weight: 900;
+    font-style: italic;
+}
+
+.green-text{
+    color:var(--green);
+}
+
+.red-text{
+    color:var(--red);
+}
+
+#navbar{
+    background-color: var(--text);
+    padding: 5px;
+}
+
+.navbar-link{
+    color:var(--highlight);
+    text-decoration: none;
+}
+
+table{
+    /* making sure table is properly center */
+    margin: auto;
+}
+
+
+label{
+    /*making sure textboxes are properly aligned */
+    display: inline-block;
+    width: 5em;
+}
+
+#line-background{
+    width: 80vw;
+    height:2vh;
+    padding: 2px;
+    background-color: var(--text);
+    margin: auto;
+}
+
+#line-foreground{
+    height: 2vh;
+    background-color: var(--highlight);
+}
+
+/* using !important so that it's css is not overwritten by pure-button */
+.primary-button{
+    background: var(--highlight) !important; 
+    color: var(--text) !important;
+}
+
+.delete-button{
+    background: var(--red) !important;
+    color: var(--background) !important;
+}
