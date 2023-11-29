@@ -2,23 +2,29 @@ from app import db
 
 # linking tables
 groups = db.Table('groups',
-                  db.Column('user_id', db.Integer,
+                  db.Column('user_id', db.String(500),
                             db.ForeignKey('user.id'), primary_key=True),
                   db.Column('group_id', db.Integer,
                             db.ForeignKey('group.id'), primary_key=True))
 likes = db.Table('likes',
-                 db.Column('user_id', db.Integer,
-                           db.ForeignKey('user.id'), primary_key=True),
+                 db.Column('user_id', db.String(500),
+                            db.ForeignKey('user.id'), primary_key=True),
                  db.Column('post_id', db.Integer,
                            db.ForeignKey('post.id'), primary_key=True))
 
-
+user_roles = db.Table('user_roles',
+                 db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+                 db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
 # DB Models
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(500), nullable=False)
+    email = db.Column(db.String(500), unique=True, nullable=False)
+    password = db.Column(db.String(500),nullable = True)
+    active = db.Column(db.Boolean, nullable=False)
+    fs_uniquifier = db.Column(db.String(64), unique=True, nullable=False)
     # one to many relationship
-    posts = db.relationship('post', backref='user')
+    posts = db.relationship('Post', backref='user')
 
 
 class Post(db.Model):
@@ -32,5 +38,9 @@ class Post(db.Model):
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(500), nullable=False)
-    posts = db.relationship('group', backref='group')
-    users = db.relationship('user', secondary=groups, backref='groups')
+    posts = db.relationship('Post', backref='group')
+    users = db.relationship('User', secondary=groups, backref='groups')
+    
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(500))

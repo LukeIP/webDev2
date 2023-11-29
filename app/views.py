@@ -8,7 +8,10 @@ admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Post, db.session))
 admin.add_view(ModelView(Group, db.session))
 
+
 @app.route('/users/<id>.html')
 def show_wall(id):
-    user = User.one_or_404(id=id)
+    user = User.query.filter_by(id=id).first()
+    print(user.name)
     return render_template('user_wall.html', user=user)
+

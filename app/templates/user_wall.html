@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>{{User.title}}</h1>
-    {{for posts in User.posts}}
+    <h1>{{user.name}}</h1>
+    {% for posts in user.posts %}
+    <p>1</p>
     <div class="post">
-        <p>{{posts.content}}</p>
+        <p>{{posts.text}}</p>
     </div>
-    {%endfor%}
+    {% endfor %}
 {% endblock %}
