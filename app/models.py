@@ -18,7 +18,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(500), nullable=False)
     # one to many relationship
-    posts = db.relationship('Post', backref='user')
+    posts = db.relationship('post', backref='user')
 
 
 class Post(db.Model):
@@ -26,7 +26,7 @@ class Post(db.Model):
     text = db.Column(db.String(500), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=True)
-    likes = db.relationship('user', secondary=likes, backref='liked_posts')
+    likes = db.relationship('User', secondary=likes, backref='liked_posts')
 
 
 class Group(db.Model):
