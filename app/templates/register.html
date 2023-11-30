@@ -1,4 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-
+<h1>Register</h1>
+<form action = "" method="post" id="loginForm" class="pure-form">
+        {{ form.hidden_tag() }}
+    <label for = "name"> Name: </label> {{form.name}} <br>
+    {% for error in form.name.errors %}
+            <p class='red-text'>Error: {{ error }} </p>
+    {% endfor %}<br>
+    <label for = "email">Email: </label> {{form.email}} <br>
+    {% for error in form.email.errors %}
+            <p class='red-text'>Error: {{ error }} </p>
+    {% endfor %}<br>
+    <label for = "password"> Password: </label> {{form.password}} <br>
+    {% for error in form.password.errors %}
+            <p class='red-text'>Error: {{ error }} </p>
+    {% endfor %}<br>
+    <label for= "confirm-pasword"> Confirm: </label> {{form.confirm_password}} <br>
+    {% for error in form.confirm_password.errors %}
+            <p class='red-text'>Error: {{ error }} </p>
+    {% endfor %}<br>
+    <input type="submit" class="pure-button primary-button" role="button" value = "Submit">
+</form>
 {% endblock %}

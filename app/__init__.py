@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_admin import Admin
 from flask_babel import Babel
+from flask_login import LoginManager
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -15,11 +16,9 @@ migrate = Migrate(app, db)
 
 babel = Babel(app)
 
-# user_datastore = SQLAlchemySessionUserDatastore(db.session,
-#                                                 User, Role)
-# security = Security(app, user_datastore)
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 admin = Admin(app)
-
 
 from app import views, models

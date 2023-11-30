@@ -1,4 +1,6 @@
 from app import db
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # linking tables
 groups = db.Table('groups',
@@ -8,23 +10,29 @@ groups = db.Table('groups',
                             db.ForeignKey('group.id'), primary_key=True))
 likes = db.Table('likes',
                  db.Column('user_id', db.String(500),
-                            db.ForeignKey('user.id'), primary_key=True),
+                           db.ForeignKey('user.id'), primary_key=True),
                  db.Column('post_id', db.Integer,
                            db.ForeignKey('post.id'), primary_key=True))
 
-user_roles = db.Table('user_roles',
-                 db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-                 db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
+
 # DB Models
-class User(db.Model):
+# User also inherits from flask_login usermixin so it has correct format
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(500), nullable=False)
     email = db.Column(db.String(500), unique=True, nullable=False)
-    password = db.Column(db.String(500),nullable = True)
-    active = db.Column(db.Boolean, nullable=False)
-    fs_uniquifier = db.Column(db.String(64), unique=True, nullable=False)
+    name = db.Column(db.String(500), nullable=False)
+    # __ used to mark it as a property that should not be edited directly
+    __password_hash = db.Column(db.String(500))
     # one to many relationship
     posts = db.relationship('Post', backref='user')
+    owned_groups = db.relationship('Group', backref='owner')
+
+    # helper functions which should be used to set password
+    def set_password(self, password):
+        self.__password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.__password_hash, password)
 
 
 class Post(db.Model):
@@ -40,7 +48,4 @@ class Group(db.Model):
     name = db.Column(db.String(500), nullable=False)
     posts = db.relationship('Post', backref='group')
     users = db.relationship('User', secondary=groups, backref='groups')
-    
-class Role(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(500))
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
