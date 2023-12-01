@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import DecimalField, StringField, EmailField, SubmitField, PasswordField
+from wtforms import StringField, EmailField, SubmitField, PasswordField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, NumberRange, Email, ValidationError, EqualTo
 from app.models import User
 
@@ -19,3 +19,15 @@ class LoginForm(FlaskForm):
     email = EmailField("Email", validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Submit")
+
+class PostForm(FlaskForm):
+    content = TextAreaField("Content", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+class AddGroupForm(FlaskForm):
+    name = StringField("Group", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+class AddUserGroupForm(FlaskForm):
+    user = SelectField("User")
+    submit = SubmitField("Submit")    
