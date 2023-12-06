@@ -10,23 +10,38 @@ class RegisterForm(FlaskForm):
         if User.query.filter_by(email=field.data.strip()).first() is not None:
             raise ValidationError("Account already associated with email")
     name = StringField("Name", validators=[DataRequired()])
-    email = EmailField("Email", validators=[DataRequired(), Email(), EmailExists])
+    # email validator from external package
+    email = EmailField(
+        "Email",
+        validators=[
+            DataRequired(),
+            Email(),
+            EmailExists])
     password = PasswordField("Password", validators=[DataRequired()])
-    confirm_password = PasswordField("Confirm Password", validators=[DataRequired(), EqualTo("password")])
+    # confirm password must be equal to password - used to ensure
+    # that user types in password correctly
+    confirm_password = PasswordField(
+        "Confirm Password", validators=[
+            DataRequired(), EqualTo("password")])
     submit = SubmitField("Submit")
 
+
 class LoginForm(FlaskForm):
+    # email validator from external package
     email = EmailField("Email", validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Submit")
+
 
 class PostForm(FlaskForm):
     content = TextAreaField("Content", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
+
 class AddGroupForm(FlaskForm):
     name = StringField("Group", validators=[DataRequired()])
     submit = SubmitField("Submit")
+
 
 class AddUserGroupForm(FlaskForm):
     user = SelectField("User")

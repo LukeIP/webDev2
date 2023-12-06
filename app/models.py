@@ -22,6 +22,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(500), unique=True, nullable=False)
     name = db.Column(db.String(500), nullable=False)
     # __ used to mark it as a property that should not be edited directly
+    # password has is stored so that password is not stored directly in
+    # plaintext
     __password_hash = db.Column(db.String(500))
     # one to many relationship
     posts = db.relationship('Post', backref='user')
@@ -29,7 +31,7 @@ class User(db.Model, UserMixin):
 
     # helper functions which should be used to set password
     def set_password(self, password):
-        self.__password_hash = generate_password_hash(password) 
+        self.__password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.__password_hash, password)
@@ -38,18 +40,22 @@ class User(db.Model, UserMixin):
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(500), nullable=False)
+    # one to one relationship
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=True)
+    # many to many relationships
     likes = db.relationship('User', secondary=likes, backref='liked_posts')
-    
+
 
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(500), nullable=False)
+    # many to many relationship
     posts = db.relationship('Post', backref='group')
     users = db.relationship('User', secondary=groups, backref='groups')
+    # one to one relationship
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     # Operator overload for ==
-    def __eq__(self,other):
+
+    def __eq__(self, other):
         return self.id == int(other)
-        
