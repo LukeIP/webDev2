@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Add User To Group</h1>
+<form action="" method="post" id="addUserGroupForm" class="pure-form">
+    {{ form.hidden_tag() }}
+    <label for="user">User:  </label> {{ form.user }} <br>
+    {% for error in form.user.errors %}
+            <p class='red-text'>Error: {{ error }} </p>
+    {% endfor %}<br>
+    <input type="submit" class="pure-button primary-button" role="button" value="Submit">
+</form>
+{% endblock %}

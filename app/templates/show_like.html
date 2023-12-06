@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1> {{title}} </h1>
+<table>
+<th> Post </th>
+{%for like in likes%}
+<tr>
+<td><a href="/User/{{like.user_id}}">{{like.text}}</a></td>
+</tr>
+{%endfor%}
+</table>
+{% endblock %}

@@ -1,9 +1,9 @@
 :root{
-    --background: #fffffe;
-    --text: #17152b;
-    --highlight: #ff9900;
+    --background: #000;
+    --text: #fff;
+    --highlight: #e00;
     --red: #ca3c3c;
-    --green: #00893e
+    --green: #37c577;
 }
 
 body{
@@ -14,18 +14,19 @@ body{
     
 }
 
+a{
+    color: var(--highlight);
+}
+
+a:visited{
+    color:var(--highlight);
+}
+
 h1,h2,h3{
     font-weight: 900;
     font-style: italic;
 }
 
-.green-text{
-    color:var(--green);
-}
-
-.red-text{
-    color:var(--red);
-}
 
 #navbar{
     background-color: var(--text);
@@ -35,11 +36,6 @@ h1,h2,h3{
 .navbar-link{
     color:var(--highlight);
     text-decoration: none;
-}
-
-table{
-    /* making sure table is properly center */
-    margin: auto;
 }
 
 
@@ -68,7 +64,27 @@ label{
     color: var(--text) !important;
 }
 
-.delete-button{
-    background: var(--red) !important;
+.post{
+    background: var(--text) !important;
     color: var(--background) !important;
+    display: inline-block;
+    width: 80vw;
+    border-radius: 1vh;
+    margin: 1vh;
+}
+
+table{
+    color: var(--background);
+    background: var(--text);
+    border-radius: 1vh ;
+    margin: 1vh;
+    width: 75vh;
+    display: inline-block;
+    text-align:center !important;
+    margin-left: auto;
+    margin-right: auto;
+}
+tbody{
+    width: 100%;
+    display: table;
 }

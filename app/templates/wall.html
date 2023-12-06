@@ -1,11 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
-    {% block personal %}
-    {% endblock %}
+{% block personal %}
+{% endblock %}
+<br>
+    {% if user is not none %}
+    <a href="/likes/{{user.id}}"> {{user.name}} Likes </a><br>
+    {% endif %}
     <h1>{{name}}</h1>
     {% for post in posts %}
     <div class="post">
+        <a href="/User/{{post.user.id}}"><h2> {{post.user.name}} </h2></a>
         <p>{{post.text}}</p>
+        <form>
+            <button class="like-button pure-button primary-button" id={{post.id}}>
+                <i class="fa-regular fa-thumbs-up" alt="" aria-hidden="true"></i>
+                Toggle Like
+            </button>
+            
+        </form>
+        <p>
+        {% for like in post.likes %}
+            <a href="User/{{like.id}}"> {{ like.name }}</a> liked this post. 
+        {% endfor %}</p>
     </div>
     {% endfor %}
 {% endblock %}

@@ -3,7 +3,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, admin, login_manager
 from app.models import db, User, Post, Group
-from .forms import LoginForm, RegisterForm, PostForm, AddGroupForm
+from .forms import LoginForm, RegisterForm, PostForm, AddGroupForm, AddUserGroupForm
 
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Post, db.session))
@@ -13,8 +13,21 @@ admin.add_view(ModelView(Group, db.session))
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+@app.route('/likes/<user_id>')
+def show_likes(user_id):
+    user = User.query.get_or_404(user_id, description=f"No User with id {id} found.")
+    likes = user.liked_posts
+    return render_template("show_like.html", title=f"{user.name} likes",
+                           likes=likes, user=user)
+@app.route('/users')
+def show_users():
+    return render_template("table_elements.html", title="User", data=User.query.all())
 
-@app.route('/users/<id>')
+@app.route('/groups')
+def show_groups():
+    return render_template("table_elements.html", title="Group", data=Group.query.all())
+
+@app.route('/User/<id>')
 def show_wall(id):
     user = User.query.get_or_404(id, description=f"No User with id {id} found.")
     # if user is logged in and going to their wall
@@ -22,17 +35,29 @@ def show_wall(id):
     if current_user.is_authenticated and int(current_user.id) == int(id):
         return redirect('/home')
     return render_template("wall.html", name=user.name,
-                           posts=user.posts)
-
-@app.route("/group/<id>")
+                           posts=user.posts, title=user.name,
+                           curent_user=current_user)
+@app.route('/like/<post_id>')
+def like(post_id):
+    if current_user.is_authenticated:
+        # like the thing
+        p = Post.query.get(post_id)
+        if current_user in p.likes:
+            p.likes.remove(current_user)
+        else:
+            p.likes.append(current_user)
+        db.session.commit()
+    return "success"
+    
+@app.route("/Group/<id>")
 def group_wall(id):
-    if current_user.is_authenticated and int(id) in current_user.groups:
+    if current_user.is_authenticated and id in current_user.groups:
         return redirect(f"/group_post/{id}")
     group = Group.query.get_or_404(id, description=f"No Group with id {id} found.")
     return render_template("wall.html", name=group.name,
-                           post=group.posts)
+                           posts=group.posts, title=group.name)
 
-@app.route("/group_post/<id>")
+@app.route("/group_post/<id>", methods=["GET", "POST"])
 @login_required
 def group_post_wall(id):
     if id not in current_user.groups:
@@ -42,13 +67,32 @@ def group_post_wall(id):
     if form.validate_on_submit():
         p = Post(text=form.content.data.strip(),
                  user_id=current_user.id,
-                 group_id=id)
+                 )
         db.session.add(p)
         db.session.commit()
-        return redirect("/group_post/<id>") 
-    return render_template("wall.html", name=group.name,
-                           post=group.posts, form=form)
-    
+        group.posts.append(p)
+        db.session.commit()
+        return redirect(f"/group_post/{id}") 
+    return render_template("group_post.html", name=group.name,
+                           posts=group.posts, form=form, 
+                           title=group.name, id=group.id)
+
+@app.route("/add_group_user/<id>", methods=["GET", "POST"])
+@login_required
+def add_group_user(id):
+    users = User.query.all()
+    form = AddUserGroupForm()
+    email = []
+    for user in users:
+        email.append(user.email)
+    form.user.choices = email
+    if form.validate_on_submit():
+        g = Group.query.get(id)
+        u = user.query.filter_by(email=form.user.data).first()
+        g.users.append(u)
+        db.session.commit()
+        return redirect(f"/Group/{id}")
+    return render_template("add_group_user.html", title="Add User to Group", form=form)    
 
 @app.route("/add_group", methods=["GET", "POST"])
 @login_required
@@ -57,10 +101,13 @@ def add_group():
     if form.validate_on_submit():
         g=Group(name=form.name.data.strip(),
                 owner_id = current_user.id)
+        # add user to group
+        g.users.append(current_user)
         db.session.add(g)
         db.session.commit()
         return redirect(f"/group_post/{g.id}")
-    return render_template("add_group.html", form=form)
+    return render_template("add_group.html", form=form,
+                           title = "Add Group")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -72,10 +119,11 @@ def register():
         u = User(email=form.email.data.strip(), 
                  name=form.name.data.strip(),)
         u.set_password(form.password.data)
-        db.session.add(u)
+        db.session.add(u)   
         db.session.commit()
         return redirect('/login')
-    return render_template("register.html",form=form)
+    return render_template("register.html",form=form,
+                           title="Register")
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -91,7 +139,8 @@ def login():
             return redirect('/home')
         else:
             return redirect('/login')   
-    return render_template("login.html", form=form)
+    return render_template("login.html", form=form,
+                           title="Login")
 
 
 @app.route("/home", methods=["GET", "POST"])
@@ -106,7 +155,7 @@ def home():
         return redirect("/home")
     posts = current_user.posts
     return render_template("home.html", user=current_user, form=form,
-                           posts=posts, name="Wall")
+                           posts=posts, name="Wall", title="Home")
 
 @app.route("/logout")
 @login_required

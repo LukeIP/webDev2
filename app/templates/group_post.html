@@ -1,0 +1,14 @@
+{% extends "wall.html" %}
+{% block personal %}
+<h1> Add User to Group </h1>
+<a href="/add_group_user/{{id}}"> Add User to Group </a>
+<h1> Make Post </h1>
+<form action="" method="post" id="postForm" class="pure=-form">
+    {{ form.hidden_tag() }}
+    <label for="content">Content:</label>  {{form.content}} <br>
+    {% for error in form.content.errors %}
+        <p class='red-text'>Error: {{ error }} </p>
+    {% endfor %}<br>
+    <input type="submit" class="pure-button primary-button" role="button" value="Submit">
+</form>
+{% endblock %}

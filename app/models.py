@@ -49,3 +49,7 @@ class Group(db.Model):
     posts = db.relationship('Post', backref='group')
     users = db.relationship('User', secondary=groups, backref='groups')
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    # Operator overload for ==
+    def __eq__(self,other):
+        return self.id == int(other)
+        

@@ -30,4 +30,4 @@ class AddGroupForm(FlaskForm):
 
 class AddUserGroupForm(FlaskForm):
     user = SelectField("User")
-    submit = SubmitField("Submit")    
+    submit = SubmitField("Submit")

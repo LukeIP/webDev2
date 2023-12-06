@@ -11,36 +11,34 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;1,600;1,900&display=swap" rel="stylesheet">
         <!-- Font Awesome, Font Awesome Pro 6.4.2. https://fontawesome.com. [Icon]. [Last Accessed 26/10/2023]-->
-        <script src="https://kit.fontawesome.com/5f3915213c.js" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/85ff86a312.js" crossorigin="anonymous"></script>
+        <script src="{{url_for('static',filename='jquery-3.7.1.js')}}"></script>
+        <script src="{{url_for('static',filename='script.js')}}"></script>
         <link rel='icon' type="image/x-icon" href="{{url_for('static', filename='favicon.svg')}}"/>
         {% if title %}
         <title>{{ title }}</title>
         {% else %}
-        <title>Budget App</title>
+        <title>Social App</title>
         {% endif %}
     </head>
     <body>
         <!-- Website navbar goes here-->
         <!-- Tagging for screenreaders -->
         <!-- The icons should be hidden from screen readers as the text gives all needed information-->
-        <!-- <div id="navbar" role="navigation">
+        <div id="navbar" role="navigation">
                 <div class='pure-g'>
                 <div class='pure-u-1-6'> <a href='/' class='navbar-link'>
                     <i class="fa-solid fa-house" alt="" aria-hidden="true"></i> Home</a> </div>
-                <div class='pure-u-1-8'>  <a href="/income.html" class="navbar-link">
-                    <i class="fa-solid fa-sack-dollar" alt="" aria-hidden="true"></i> Income</a> </div>
-                <div class='pure-u-1-8'>  <a href="/addIncome.html" class="navbar-link">
-                    <i class="fa-solid fa-plus" alt="" aria-hidden="true"></i> Add Income</a> </div>
-                <div class='pure-u-1-8'> <a href="/expenses.html" class="navbar-link">
-                    <i class="fa-solid fa-sack-xmark" alt="" aria-hidden="true"></i> Expense</a> </div>
-                <div class='pure-u-1-8'> <a href="/addExpenses.html" class="navbar-link"> 
-                    <i class="fa-solid fa-plus" alt="" aria-hidden="true"></i> Add Expense</a> </div>
-                <div class='pure-u-1-8'> <a href="/goal.html" class="navbar-link"> 
-                    <i class="fa-solid fa-vault" alt="" aria-hidden="true"></i> Goal</a> </div>
-                <div class='pure-u-1-8'> <a href="/addGoal.html" class="navbar-link">
-                    <i class="fa-solid fa-plus" alt="" aria-hidden="true"></i> Add Goal</a> </div>
+                <div class='pure-u-1-6'>  <a href="/users" class="navbar-link">
+                    <i class="fa-solid fa-user" alt="" aria-hidden="true"></i> Users</a> </div>
+                <div class='pure-u-1-6'>  <a href="/groups" class="navbar-link">
+                    <i class="fa-solid fa-users" alt="" aria-hidden="true"></i> Group</a> </div>
+                <div class='pure-u-1-6'> <a href="/add_group" class="navbar-link">
+                    <i class="fa-solid fa-plus" alt="" aria-hidden="true"></i> Add Group</a> </div>
+                <div class='pure-u-1-6'> <a href="/logout" class="navbar-link"> 
+                    <i class="fa-solid fa-right-from-bracket" alt="" aria-hidden="true"></i> Logout</a> </div>
             </div>
-        </div> -->
+        </div>
         <main>
             {% block content %}
             {% endblock %}
